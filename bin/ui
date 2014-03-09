@@ -1,8 +1,16 @@
 #!/usr/bin/env node
 
-var StatusControl = require('../lib/status-control');
+var StatusControl = require('../lib/status-control'),
+    Button = require('../lib/button');
 
 var statusControl = new StatusControl([0, 2, 3], 6, [5, 4]);
+
+var nextButton = new Button(1, { pull: 'up' });
+nextButton.on('changed', function () {
+  if (statusControl.isOn && nextButton.isPressed()) {
+    console.log('Next station');
+  }
+});
 
 // Keep alive
 require('timers').setInterval(function () {}, 10000000);
