@@ -2,7 +2,7 @@
 
 var StatusControl = require('../lib/status-control');
 
-var statusControl = new StatusControl([0, 2, 3], 6);
+var statusControl = new StatusControl([0, 2, 3], 6, [5, 4]);
 
 // Keep alive
 require('timers').setInterval(function () {}, 10000000);
