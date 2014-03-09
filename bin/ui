@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+
+var LED = require('../lib/led');
+
+var led = new LED(0, { reverse: true });
+
+led.on();
+
+// Keep alive
+require('timers').setInterval(function () {}, 10000000);
+
+process.on( 'SIGINT', function() {
+  led.destroy();
+
+  process.exit( );
+})
