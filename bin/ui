@@ -1,35 +1,15 @@
 #!/usr/bin/env node
 
-var RGB    = require('../lib/rgb'),
-    Button = require('../lib/button');
+var StatusControl = require('../lib/status-control');
 
-var red   = [255, 0, 0],
-    green = [0, 255, 0];
-
-var rgb = new RGB([0, 2, 3], { reverse: true });
-rgb.colour(green);
-
-var button = new Button(6, { pull: 'down' });
-button.on('changed', function () {
-  console.log('Button changed, state', button.state());
-  if (button.isPressed()) {
-    console.log('Button is pressed');
-    rgb.colour(red);
-  } else if (button.isReleased()) {
-    console.log('Button is released');
-    rgb.colour(green);
-  } else {
-    console.log('Button is unknown state -- weird');
-  }
-});
+var statusControl = new StatusControl([0, 2, 3], 6);
 
 // Keep alive
 require('timers').setInterval(function () {}, 10000000);
 
 function cleanup() {
   console.log('Cleaning up before shutdown');
-  rgb.destroy();
-  button.destroy();
+  statusControl.destroy();
 
   process.exit();
 }
