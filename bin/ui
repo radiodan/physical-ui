@@ -1,16 +1,38 @@
 #!/usr/bin/env node
 
-var LED = require('../lib/led');
+var RGB    = require('../lib/rgb'),
+    Button = require('../lib/button');
 
-var led = new LED(0, { reverse: true });
+var red   = [255, 0, 0],
+    green = [0, 255, 0];
 
-led.on();
+var rgb = new RGB([0, 2, 3], { reverse: true });
+rgb.colour(green);
+
+var button = new Button(6, { pull: 'down' });
+button.on('changed', function () {
+  console.log('Button changed, state', button.state());
+  if (button.isPressed()) {
+    console.log('Button is pressed');
+    rgb.colour(red);
+  } else if (button.isReleased()) {
+    console.log('Button is released');
+    rgb.colour(green);
+  } else {
+    console.log('Button is unknown state -- weird');
+  }
+});
 
 // Keep alive
 require('timers').setInterval(function () {}, 10000000);
 
-process.on( 'SIGINT', function() {
-  led.destroy();
+function cleanup() {
+  console.log('Cleaning up before shutdown');
+  rgb.destroy();
+  button.destroy();
 
-  process.exit( );
-})
+  process.exit();
+}
+
+process.on('SIGINT', cleanup);
+process.on('uncaughtException', cleanup);
