@@ -1,9 +1,15 @@
 #!/usr/bin/env node
 
 var StatusControl = require('../lib/status-control'),
+    MagicDial = require('../lib/magic-dial'),
     Button = require('../lib/button');
 
-var statusControl = new StatusControl([0, 2, 3], 6, [5, 4]);
+var statusControl,
+    magicDial;
+
+statusControl = new StatusControl([0, 2, 3], 6, [5, 4]);
+
+// magicDial = new MagicDial([0, 2, 3], 6, [5, 4]);
 
 var nextButton = new Button(1, { pull: 'up' });
 nextButton.on('changed', function () {
@@ -17,7 +23,8 @@ require('timers').setInterval(function () {}, 10000000);
 
 function cleanup() {
   console.log('Cleaning up before shutdown');
-  statusControl.destroy();
+  if (statusControl) { statusControl.destroy(); }
+  if (magicDial) { magicDial.destroy(); }
 
   process.exit();
 }
