@@ -7,11 +7,10 @@ var StatusControl = require('../lib/status-control'),
 var statusControl,
     magicDial;
 
-statusControl = new StatusControl([0, 2, 3], 6, [5, 4]);
+statusControl = new StatusControl([12, 13, 14], 7, [8, 9]);
+magicDial = new MagicDial([6, 10, 11], 3, [4, 5]);
 
-// magicDial = new MagicDial([0, 2, 3], 6, [5, 4]);
-
-var nextButton = new Button(1, { pull: 'up' });
+var nextButton = new Button(2, { pull: 'up' });
 nextButton.on('changed', function () {
   if (statusControl.isOn && nextButton.isPressed()) {
     console.log('Next station');
