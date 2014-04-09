@@ -12,7 +12,8 @@
     "url": "https://github.com/radiodan/physical-ui.git"
   },
   "dependencies": {
-    "wiring-pi": "https://github.com/radiodan/wiring-pi/archive/master.tar.gz"
+    "wiring-pi": "https://github.com/radiodan/wiring-pi/archive/master.tar.gz",
+    "request": "~2.34.0"
   },
   "keywords": [
     "radiodan"
