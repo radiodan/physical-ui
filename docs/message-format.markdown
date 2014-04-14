@@ -2,7 +2,7 @@
 
 ## Subscriptions
 
-### button.`<id>`
+### event.button.`<id>`.press
 
 Emits when button is pressed.
 
@@ -10,7 +10,7 @@ Emits when button is pressed.
       pressed: true
     }
 
-### encoder.`<id>`
+### event.rotary-encoder.`<id>`.turn
 
 Emits when encoder is actively turning.
 
@@ -19,7 +19,7 @@ Emits when encoder is actively turning.
       distance: 1
     }
 
-### rgb.`<id>`
+### event.rgb-led.`<id>`.emit
 
 Emits when RGB LED turns on or off. Also returns current colour as RGB value.
 
@@ -30,7 +30,7 @@ Emits when RGB LED turns on or off. Also returns current colour as RGB value.
 
 ## Commands
 
-### command.rgb.`<id>`
+### command.rgb-led.`<id>`
 
 Turn RGB LED on or off:
 

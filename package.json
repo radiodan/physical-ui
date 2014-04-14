@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "wiring-pi": "https://github.com/radiodan/wiring-pi/archive/master.tar.gz",
-    "request": "~2.34.0"
+    "request": "~2.34.0",
+    "radiodan-client": "~0.0.0"
   },
   "keywords": [
     "radiodan"
