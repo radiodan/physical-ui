@@ -33,8 +33,10 @@ nextButton.on('changed', function () {
 // Keep alive
 require('timers').setInterval(function () {}, 10000000);
 
-function cleanup() {
+function cleanup(err) {
   console.log('Cleaning up before shutdown');
+  console.log(err ? err.stack : err);
+
   if (statusControl) { statusControl.destroy(); }
   if (magicDial) { magicDial.destroy(); }
 
