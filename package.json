@@ -5,7 +5,7 @@
   "main": "bin/ui",
   "scripts": {
     "start": "bin/ui",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/mocha/bin/mocha --recursive --reporter=spec"
   },
   "repository": {
     "type": "git",
@@ -24,5 +24,11 @@
   "bugs": {
     "url": "https://github.com/radiodan/physical-ui/issues"
   },
-  "homepage": "https://github.com/radiodan/physical-ui"
+  "homepage": "https://github.com/radiodan/physical-ui",
+  "devDependencies": {
+    "chai-as-promised": "~4.1.1",
+    "chai": "~1.9.1",
+    "sinon": "~1.9.1",
+    "mocha": "~1.18.2"
+  }
 }
