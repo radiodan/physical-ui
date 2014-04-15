@@ -5,7 +5,9 @@
   "main": "bin/ui",
   "scripts": {
     "start": "bin/ui",
-    "test": "node_modules/mocha/bin/mocha --recursive --reporter=spec"
+    "test": "node_modules/mocha/bin/mocha --recursive --reporter=spec",
+    "coverage": "node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha test/**/test*.js -- --ui bdd -R spec -t 5000",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +31,7 @@
     "chai-as-promised": "~4.1.1",
     "chai": "~1.9.1",
     "sinon": "~1.9.1",
-    "mocha": "~1.18.2"
+    "mocha": "~1.18.2",
+    "istanbul": "~0.2.7"
   }
 }
