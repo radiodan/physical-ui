@@ -7,6 +7,19 @@ var StatusControl = require('../lib/status-control'),
 var statusControl,
     magicDial;
 
+/*
+  We can't reliably detect whether wiringPi 
+  has compiled correctly, so we check the 
+  platform as a shortcut
+*/
+var os = require('os').platform();
+
+if ( os !== 'linux' ) {
+  console.error('Aborting start-up since wiringPi will not work');
+  console.error('%s - Not a supported platform', os);
+  process.exit(1);
+}
+
 statusControl = new StatusControl([12, 13, 14], 7, [8, 9]);
 magicDial = new MagicDial([6, 10, 11], 3, [4, 5]);
 
