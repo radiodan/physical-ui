@@ -23,5 +23,18 @@ describe('Button', function () {
       assert.ok( this.wpi.pinMode.calledWith(9, this.wpi.INPUT) );
     });
 
+    it('defaults to high == pressed', function () {
+      var instance = subject.create(9, { wpi: this.wpi });
+      this.wpi.digitalRead = function () { return 1; };
+      assert.ok(instance.isPressed());
+      assert.notOk(instance.isReleased());
+    });
+
+    it('allows high value to be configured', function () {
+      var instance = subject.create(9, { wpi: this.wpi, pressedIsHigh: false });
+      this.wpi.digitalRead = function () { return 0; };
+      assert.ok(instance.isPressed());
+      assert.notOk(instance.isReleased());
+    });
   })
 });
