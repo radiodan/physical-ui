@@ -26,7 +26,7 @@ describe('Button', function () {
       assert.ok( this.wpi.pinMode.calledWith(9, this.wpi.INPUT) );
     });
 
-    it('defaults to high == pressed', function () {
+    it('defaults to high == press', function () {
       var instance = subject.create(9, { wpi: this.wpi });
       this.wpi.digitalRead = function () { return 1; };
       assert.ok(instance.isPressed());
@@ -45,7 +45,7 @@ describe('Button', function () {
     it('emits changed on press or release', function (done) {
       var eventFiredCount = 0;
       var instance = subject.create(9, { wpi: this.wpi });
-      instance.on('changed', function () {
+      instance.on('change', function () {
         eventFiredCount++;
         if (eventFiredCount === 2) { done(); }
       });
@@ -53,25 +53,25 @@ describe('Button', function () {
       instance.handleEvent();
     });
 
-    it('emits pressed', function (done) {
+    it('emits press event', function (done) {
       var instance = subject.create(9, { wpi: this.wpi });
       this.wpi.digitalRead = function () { return 1; };
-      instance.on('pressed', function () {
+      instance.on('press', function () {
         done();
       });
-      instance.on('released', function () {
+      instance.on('release', function () {
         throw Error();
       });
       instance.handleEvent();
     });
 
-    it('emits released', function (done) {
+    it('emits release event', function (done) {
       var instance = subject.create(9, { wpi: this.wpi });
       this.wpi.digitalRead = function () { return 0; };
-      instance.on('pressed', function () {
+      instance.on('press', function () {
         throw Error();
       });
-      instance.on('released', function () {
+      instance.on('release', function () {
         done();
       });
       instance.handleEvent();
