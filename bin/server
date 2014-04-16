@@ -2,7 +2,8 @@
 
 var path       = require('path'),
     bootstrap  = require('../lib/bootstrap'),
-    configPath = path.resolve(__dirname+'/..', process.argv[2]),
+    opts       = {},
+    configPath,
     config;
 
 if(process.argv.length != 3) {
@@ -10,10 +11,19 @@ if(process.argv.length != 3) {
   process.exit(1);
 }
 
+configPath = path.resolve(__dirname+'/..', process.argv[2]);
+
 try {
   config = require(configPath);
 } catch(err) {
   console.warn('Could not parse config at ', configPath, err);
 }
 
-bootstrap.start(config);
+console.log('process.env.WIRING_PI', process.env.WIRING_PI);
+
+// Override wiring-pi with mock object
+if( process.env.WIRING_PI && process.env.WIRING_PI === 'mock' ) {
+  opts.wpi = require('../lib/wiring-pi-mock').create();
+}
+
+bootstrap.start(config, opts);
