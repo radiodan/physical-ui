@@ -28,6 +28,11 @@ describe('LED', function () {
       led.on();
       assert.ok( this.wpi.digitalWrite.calledWith(9, 1) );
     });
+    it('sends correct signal when reversed', function () {
+      var led = subject.create(9, { reverse:true, wpi: this.wpi });
+      led.on();
+      assert.ok( this.wpi.digitalWrite.calledWith(9, 0) );
+    });
     it('returns self for chaining', function () {
       var led = subject.create(9, { wpi: this.wpi });
       assert.equal( led.on(), led );
@@ -39,6 +44,11 @@ describe('LED', function () {
       var led = subject.create(9, { wpi: this.wpi });
       led.off();
       assert.ok( this.wpi.digitalWrite.calledWith(9, 0) );
+    });
+    it('sends correct signal when reversed', function () {
+      var led = subject.create(9, { reverse:true, wpi: this.wpi });
+      led.off();
+      assert.ok( this.wpi.digitalWrite.calledWith(9, 1) );
     });
     it('returns self for chaining', function () {
       var led = subject.create(9, { wpi: this.wpi });
