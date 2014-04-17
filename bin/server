@@ -2,7 +2,7 @@
 
 var path       = require('path'),
     bootstrap  = require('../lib/bootstrap'),
-    opts       = {},
+    opts       = { repl: process.env.REPL },
     configPath,
     config;
 
@@ -19,10 +19,9 @@ try {
   console.warn('Could not parse config at ', configPath, err);
 }
 
-console.log('process.env.WIRING_PI', process.env.WIRING_PI);
-
 // Override wiring-pi with mock object
 if( process.env.WIRING_PI && process.env.WIRING_PI === 'mock' ) {
+  console.warn('Using mock wiring pi');
   opts.wpi = require('../lib/wiring-pi-mock').create();
 }
 
