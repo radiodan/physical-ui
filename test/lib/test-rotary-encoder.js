@@ -55,7 +55,7 @@ describe('RotaryEncoder', function () {
         done();
       });
 
-      instance.readState = function () { return 'clockwise'; }
+      instance.readState = function () { return 1; }
       mockTimer.fn();
     });
   });
@@ -66,7 +66,7 @@ describe('RotaryEncoder', function () {
         mockTimer.fn = fn;
         mockTimer.delay = delay;
       };
-      var algoFn = sinon.stub().returns('clockwise');
+      var algoFn = sinon.stub().returns(1);
       var algoConstructor = sinon.stub().returns(algoFn);
       var instance = subject.create(1, 20, { wpi: this.wpi, timer: mockTimer, algorithm: algoConstructor });
       mockTimer.fn();
@@ -85,7 +85,7 @@ describe('RotaryEncoder', function () {
 
       assert.throws(function () {
         mockTimer.fn();
-      }, 'readState must return "clockwise", "anticlockwise" or "null"');
+      }, 'readState must return an integer');
     });
 
     it('allows pull up/down to be configured', function () {
