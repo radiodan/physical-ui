@@ -60,6 +60,40 @@ describe('RotaryEncoder', function () {
     });
   });
 
+  describe('algorithm', function () {
+    it('can be swapped out for another', function () {
+      var mockTimer = function(fn, delay) {
+        mockTimer.fn = fn;
+        mockTimer.delay = delay;
+      };
+      var algorithmSpy = sinon.stub().returns(null);
+      var instance = subject.create(1, 20, { wpi: this.wpi, timer: mockTimer });
+      instance.readState = algorithmSpy;
+      mockTimer.fn();
+      assert.ok(algorithmSpy.calledWith(1, 20, this.wpi));
+    });
+
+    it('throws if function does not supply allowed return values', function () {
+      var mockTimer = function(fn, delay) {
+        mockTimer.fn = fn;
+        mockTimer.delay = delay;
+      };
+      var algorithmSpy = sinon.stub().returns(undefined);
+      var instance = subject.create(1, 20, { wpi: this.wpi, timer: mockTimer });
+      instance.readState = algorithmSpy;
+
+      assert.throws(function () {
+        mockTimer.fn();
+      }, 'readState must return "clockwise", "anticlockwise" or "null"');
+    });
+
+    it('allows pull up/down to be configured', function () {
+      subject.create(1, 20, { pullA: 'up', pullB: 'down', wpi: this.wpi });
+      assert.ok( this.wpi.pullUpDnControl.calledWith(1, this.wpi.PUD_UP) );
+      assert.ok( this.wpi.pullUpDnControl.calledWith(20, this.wpi.PUD_DOWN) );
+    });
+  });
+
   describe('#destroy', function () {
     it('exists (for API consistency)', function () {
       var instance = subject.create(1, 20, { wpi: this.wpi });
