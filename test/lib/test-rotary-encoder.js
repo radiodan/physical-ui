@@ -66,11 +66,12 @@ describe('RotaryEncoder', function () {
         mockTimer.fn = fn;
         mockTimer.delay = delay;
       };
-      var algorithmSpy = sinon.stub().returns(null);
-      var instance = subject.create(1, 20, { wpi: this.wpi, timer: mockTimer });
-      instance.readState = algorithmSpy;
+      var algoFn = sinon.stub().returns('clockwise');
+      var algoConstructor = sinon.stub().returns(algoFn);
+      var instance = subject.create(1, 20, { wpi: this.wpi, timer: mockTimer, algorithm: algoConstructor });
       mockTimer.fn();
-      assert.ok(algorithmSpy.calledWith(1, 20, this.wpi));
+      assert.ok(algoConstructor.calledWith(1, 20, this.wpi));
+      assert.ok(algoFn.called);
     });
 
     it('throws if function does not supply allowed return values', function () {
