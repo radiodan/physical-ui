@@ -57,6 +57,70 @@ describe('RotaryEncoder', function () {
 
       instance.readState = function () { return 1; }
       mockTimer.fn();
+      mockTimer.fn();
+      mockTimer.fn();
+      mockTimer.fn();
+    });
+
+    it('waits for 4 deltas before emitting', function (done) {
+      var mockTimer = function(fn, delay) {
+        mockTimer.fn = fn;
+        mockTimer.delay = delay;
+      };
+
+      var readState = function () { return 1; }
+
+      var readCount = 1;
+
+      var instance = subject.create(1, 2, { 
+        wpi: this.wpi, timer: mockTimer, algorithm: function () { return readState; }
+       });
+      instance.on('turn', function (evt) {
+        assert.equal(evt.direction, 'clockwise');
+        if (readCount === 4) {
+          done();
+        } else {
+          throw Error('emitted too soon');
+        }
+      });
+
+      readCount++;
+
+      mockTimer.fn();
+      readCount++;
+
+      mockTimer.fn();
+      readCount++;
+
+      mockTimer.fn();
+      readCount++;
+    });
+
+    it('averages the deltas when emitting', function (done) {
+      var mockTimer = function(fn, delay) {
+        mockTimer.fn = fn;
+        mockTimer.delay = delay;
+      };
+
+      var readStateValue = 1;
+      var readState = function () { return 1; }
+
+      var instance = subject.create(1, 2, { 
+        wpi: this.wpi, timer: mockTimer, algorithm: function () { return readState; }
+      });
+      instance.on('turn', function (evt) {
+        assert.equal(evt.direction, 'clockwise');
+        done();
+      });
+
+      // these calls will return 1
+      mockTimer.fn();
+      mockTimer.fn();
+
+      // this call returns -1
+      // Should emit with average of 'clockwise'
+      readStateValue = -1;
+      mockTimer.fn();
     });
   });
 
