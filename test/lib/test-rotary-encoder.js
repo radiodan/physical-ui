@@ -38,7 +38,7 @@ describe('RotaryEncoder', function () {
       var instance = subject.create(9, 10, { wpi: this.wpi, timer: mockTimer });
       mockTimer.fn();
 
-      assert.equal(mockTimer.delay, 5);
+      assert.equal(mockTimer.delay, 1);
       assert.ok(this.wpi.digitalRead.calledWith(9));
       assert.ok(this.wpi.digitalRead.calledWith(10));
     });
