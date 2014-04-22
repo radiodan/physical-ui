@@ -14,8 +14,9 @@ describe('RotaryEncoder.algorithms.delta', function () {
     this.wpi = wpiMock.create(function () { return sinon.spy(); });
   });
 
+
   /*
-    A B STATE SEQ DELTA
+    A B STATE SEQ* DELTA
     1 1   3    2    1  
     0 1   2    3    1  
     0 0   0    0    1  
@@ -23,15 +24,52 @@ describe('RotaryEncoder.algorithms.delta', function () {
     1 1   3    2    1  
     0 1   2    3    1  
   */
-  describe('delta', function () {
-    it('returns the right value given A and B pin state', function () {
+  describe('rotationSequence', function () {
+    it('returns the right sequence value', function () {
       this.wpi.digitalRead = sinon.stub();
+
       this.wpi.digitalRead.withArgs(1).returns(1);
       this.wpi.digitalRead.withArgs(2).returns(1);
 
-      var fn = subject(1, 2, this.wpi);
+      var instance = subject(1, 2, this.wpi);
 
-      assert.equal(fn(), 0);
+      assert.equal(instance.rotationSequence(), 2);
+
+      this.wpi.digitalRead.withArgs(1).returns(0);
+      this.wpi.digitalRead.withArgs(2).returns(1);
+      assert.equal(instance.rotationSequence(), 3);
+
+      this.wpi.digitalRead.withArgs(1).returns(0);
+      this.wpi.digitalRead.withArgs(2).returns(0);
+      assert.equal(instance.rotationSequence(), 0);
+
+      this.wpi.digitalRead.withArgs(1).returns(1);
+      this.wpi.digitalRead.withArgs(2).returns(0);
+      assert.equal(instance.rotationSequence(), 1);
+    });
+  });
+
+  describe('delta', function () {
+    it('returns the right delta value', function () {
+      this.wpi.digitalRead = sinon.stub();
+
+      this.wpi.digitalRead.withArgs(1).returns(1);
+      this.wpi.digitalRead.withArgs(2).returns(1);
+
+      var instance = subject(1, 2, this.wpi);
+      assert.equal(instance(), 0);
+      assert.equal(instance(), 0);
+
+      this.wpi.digitalRead.withArgs(1).returns(0);
+      this.wpi.digitalRead.withArgs(2).returns(1);
+      assert.equal(instance(), 1);
+
+      this.wpi.digitalRead.withArgs(1).returns(0);
+      this.wpi.digitalRead.withArgs(2).returns(0);
+      assert.equal(instance(), 1);
+      this.wpi.digitalRead.withArgs(1).returns(1);
+      this.wpi.digitalRead.withArgs(2).returns(0);
+      assert.equal(instance(), 1);
     });
   });
 });
