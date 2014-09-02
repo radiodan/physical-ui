@@ -56,6 +56,39 @@ describe('LED', function () {
     });
   });
 
+  describe('#brightness', function () {
+    it('sets pin for software PWM', function () {
+      var pwmInitialValue = 0,
+          pwmRange = 100,
+          led = subject.create(9, { wpi: this.wpi });
+
+      led.brightness(40);
+      assert.ok( this.wpi.softPwmCreate.calledWith(9, pwmInitialValue, pwmRange) );
+      assert.ok( this.wpi.softPwmWrite.calledWith(9, 40) );
+    });
+    // it('handles reversed LED', function () {
+    //   var pwmInitialValue = 255,
+    //       pwmRange = 255,
+    //       led = subject.create(9, { wpi: this.wpi, reverse: true });
+
+    //   led.brightness(255);
+    //   assert.ok( this.wpi.softPwmCreate.calledWith(9, pwmInitialValue, pwmRange) );
+    //   assert.ok( this.wpi.softPwmWrite.calledWith(9, 0) );
+    // });
+    it('calls PWM setup only once', function () {
+      var led = subject.create(9, { wpi: this.wpi });
+
+      led.brightness(40);
+      led.brightness(60);
+      assert.ok( this.wpi.softPwmCreate.calledOnce );
+    });
+    it('returns self for chaining', function () {
+      var led = subject.create(9, { wpi: this.wpi });
+      assert.equal( led.brightness(50), led );
+    });
+  });
+
+
   describe('#destroy', function () {
     it('turns LED off', function () {
       var led = subject.create(9, { wpi: this.wpi });
