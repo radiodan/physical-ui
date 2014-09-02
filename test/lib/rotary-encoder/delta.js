@@ -17,12 +17,12 @@ describe('RotaryEncoder.algorithms.delta', function () {
 
   /*
     A B STATE SEQ* DELTA
-    1 1   3    2    1  
-    0 1   2    3    1  
-    0 0   0    0    1  
-    1 0   1    1    1  
-    1 1   3    2    1  
-    0 1   2    3    1  
+    1 1   3    2    1
+    0 1   2    3    1
+    0 0   0    0    1
+    1 0   1    1    1
+    1 1   3    2    1
+    0 1   2    3    1
   */
   describe('rotationSequence', function () {
     it('returns the right sequence value', function () {

@@ -39,7 +39,7 @@ describe('RGB', function () {
   describe('#on', function () {
     it('turns all LEDs on', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
-      
+
       rgb.on();
 
       assert.ok(this.led.on.calledAfter(this.led.off), 'on called after off');
@@ -70,13 +70,13 @@ describe('RGB', function () {
       var red   = createLEDInstanceSpy(),
           green = createLEDInstanceSpy(),
           blue  = createLEDInstanceSpy();
-      
+
       this.LED.create.withArgs(9).returns(red);
       this.LED.create.withArgs(10).returns(green);
       this.LED.create.withArgs(11).returns(blue);
-      
+
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
-      
+
       rgb.colour([255, 0, 0]);
 
       assert.ok(red.on.called);

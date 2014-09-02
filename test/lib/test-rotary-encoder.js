@@ -72,7 +72,7 @@ describe('RotaryEncoder', function () {
 
       var readCount = 1;
 
-      var instance = subject.create(1, 2, { 
+      var instance = subject.create(1, 2, {
         wpi: this.wpi, timer: mockTimer, algorithm: function () { return readState; }
        });
       instance.on('turn', function (evt) {
@@ -105,7 +105,7 @@ describe('RotaryEncoder', function () {
       var readStateValue = 1;
       var readState = function () { return 1; }
 
-      var instance = subject.create(1, 2, { 
+      var instance = subject.create(1, 2, {
         wpi: this.wpi, timer: mockTimer, algorithm: function () { return readState; }
       });
       instance.on('turn', function (evt) {
