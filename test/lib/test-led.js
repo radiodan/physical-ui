@@ -66,15 +66,15 @@ describe('LED', function () {
       assert.ok( this.wpi.softPwmCreate.calledWith(9, pwmInitialValue, pwmRange) );
       assert.ok( this.wpi.softPwmWrite.calledWith(9, 40) );
     });
-    // it('handles reversed LED', function () {
-    //   var pwmInitialValue = 255,
-    //       pwmRange = 255,
-    //       led = subject.create(9, { wpi: this.wpi, reverse: true });
+    it('handles reversed LED', function () {
+      var pwmInitialValue = 100,
+          pwmRange = 100,
+          led = subject.create(9, { wpi: this.wpi, reverse: true });
 
-    //   led.brightness(255);
-    //   assert.ok( this.wpi.softPwmCreate.calledWith(9, pwmInitialValue, pwmRange) );
-    //   assert.ok( this.wpi.softPwmWrite.calledWith(9, 0) );
-    // });
+      led.brightness(40);
+      assert.ok( this.wpi.softPwmCreate.calledWith(9, pwmInitialValue, pwmRange) );
+      assert.ok( this.wpi.softPwmWrite.calledWith(9, 60) );
+    });
     it('calls PWM setup only once', function () {
       var led = subject.create(9, { wpi: this.wpi });
 
