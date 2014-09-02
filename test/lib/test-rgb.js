@@ -9,7 +9,7 @@ var subject = require('../../lib/rgb'),
     wpiMock = require('../../lib/wiring-pi-mock');
 
 function createLEDInstanceSpy() {
-  return { on: sinon.spy(), off: sinon.spy(), destroy: sinon.spy() };
+  return { on: sinon.spy(), off: sinon.spy(), brightness: sinon.spy(), destroy: sinon.spy() };
 }
 
 describe('RGB', function () {
@@ -77,11 +77,11 @@ describe('RGB', function () {
 
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
 
-      rgb.colour([255, 0, 0]);
+      rgb.colour([255, 128, 0]);
 
-      assert.ok(red.on.called);
-      assert.notOk(green.on.called);
-      assert.notOk(blue.on.called);
+      assert.ok(red.brightness.calledWith(100));
+      assert.ok(green.brightness.calledWith(50));
+      assert.ok(blue.brightness.calledWith(0));
     });
     it('returns self for chaining', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
