@@ -5,7 +5,7 @@ var chai   = require('chai'),
     assert = chai.assert,
     sinon  = require('sinon');
 
-var subject = require('../../lib/rgb'),
+var subject = require('../../lib/components/rgb'),
     wpiMock = require('../../lib/wiring-pi-mock');
 
 function createLEDInstanceSpy() {

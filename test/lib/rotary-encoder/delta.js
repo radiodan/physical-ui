@@ -5,7 +5,7 @@ var chai   = require('chai'),
     assert = chai.assert,
     sinon  = require('sinon');
 
-var subject = require('../../../lib/rotary-encoder/delta'),
+var subject = require('../../../lib/components/rotary-encoder/delta'),
     wpiMock = require('../../../lib/wiring-pi-mock');
 
 describe('RotaryEncoder.algorithms.delta', function () {

@@ -5,7 +5,7 @@ var chai   = require('chai'),
     assert = chai.assert,
     sinon  = require('sinon');
 
-var subject = require('../../lib/rotary-encoder'),
+var subject = require('../../lib/components/rotary-encoder'),
     wpiMock = require('../../lib/wiring-pi-mock');
 
 describe('RotaryEncoder', function () {

@@ -5,7 +5,7 @@ var chai   = require('chai'),
     assert = chai.assert,
     sinon  = require('sinon');
 
-var subject = require('../../lib/button'),
+var subject = require('../../lib/components/button'),
     wpiMock = require('../../lib/wiring-pi-mock');
 
 describe('Button', function () {
