@@ -76,6 +76,23 @@ describe('Button', function () {
       });
       instance.handleEvent();
     });
+
+    it('emits hold event', function (done) {
+      var clock = sinon.useFakeTimers();
+
+      var instance = subject.create(9, { wpi: this.wpi });
+      this.wpi.digitalRead = function () { return 1; };
+      instance.on('release', function () {
+        throw Error();
+      });
+      instance.on('hold', function () {
+        done();
+      });
+      instance.handleEvent();
+
+      clock.tick(3000);
+      clock.restore();
+    });
   });
 
 });
