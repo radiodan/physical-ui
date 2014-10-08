@@ -78,7 +78,7 @@ describe('Button', function () {
     });
 
     it('emits hold event', function (done) {
-      var clock = sinon.useFakeTimers();
+      var clock = sinon.useFakeTimers(Date.now());
 
       var instance = subject.create(9, { wpi: this.wpi });
       this.wpi.digitalRead = function () { return 1; };
@@ -90,12 +90,17 @@ describe('Button', function () {
       });
       instance.handleEvent();
 
-      clock.tick(3000);
+      // Takes close to 0.5s
+      clock.tick(500);
+
+      // Takes clock to 1.5s, triggering hold timeout
+      clock.tick(1000);
+
       clock.restore();
     });
 
-    it('emits periodic hold events', function (done) {
-      var clock = sinon.useFakeTimers(),
+    it('emits periodic hold events with time since press', function (done) {
+      var clock = sinon.useFakeTimers(Date.now()),
           spy   = sinon.spy();
 
       var instance = subject.create(9, { wpi: this.wpi });
@@ -103,8 +108,9 @@ describe('Button', function () {
       instance.on('release', function () {
         throw Error();
       });
-      instance.on('hold', function () {
+      instance.on('hold', function (evt) {
         spy();
+        assert.equal(evt.holdDurationMs, spy.callCount * 1000)
         if (spy.callCount == 2) {
           done();
         }
@@ -112,6 +118,45 @@ describe('Button', function () {
       instance.handleEvent();
 
       clock.tick(2000);
+      clock.restore();
+    });
+
+    it('periodic time since press should reset between presses', function (done) {
+      var clock = sinon.useFakeTimers(Date.now()),
+          totalCallCount = 0,
+          spy   = sinon.spy();
+
+      var instance = subject.create(9, { wpi: this.wpi });
+
+      instance.on('release', function () {
+        spy = sinon.spy();
+      });
+      instance.on('hold', function (evt) {
+        spy();
+        totalCallCount++;
+        assert.equal(evt.holdDurationMs, spy.callCount * 1000);
+        if (totalCallCount == 4) {
+          done();
+        }
+      });
+
+      // Fire press event
+      this.wpi.digitalRead = function () { return 1; };
+      instance.handleEvent();
+      // Forward 2s in time
+      clock.tick(2000);
+
+      // // Fire release event
+      this.wpi.digitalRead = function () { return 0; };
+      instance.handleEvent();
+
+      // // Fire press event
+      this.wpi.digitalRead = function () { return 1; };
+      instance.handleEvent();
+
+      // // Forward 2s in time
+      clock.tick(2000);
+
       clock.restore();
     });
   });
