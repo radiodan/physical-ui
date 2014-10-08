@@ -93,6 +93,27 @@ describe('Button', function () {
       clock.tick(3000);
       clock.restore();
     });
+
+    it('emits periodic hold events', function (done) {
+      var clock = sinon.useFakeTimers(),
+          spy   = sinon.spy();
+
+      var instance = subject.create(9, { wpi: this.wpi });
+      this.wpi.digitalRead = function () { return 1; };
+      instance.on('release', function () {
+        throw Error();
+      });
+      instance.on('hold', function () {
+        spy();
+        if (spy.callCount == 2) {
+          done();
+        }
+      });
+      instance.handleEvent();
+
+      clock.tick(2000);
+      clock.restore();
+    });
   });
 
 });
