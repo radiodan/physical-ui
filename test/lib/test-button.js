@@ -110,7 +110,7 @@ describe('Button', function () {
       });
       instance.on('hold', function (evt) {
         spy();
-        assert.equal(evt.holdDurationMs, spy.callCount * 1000)
+        assert.equal(evt.durationMs, spy.callCount * 1000)
         if (spy.callCount == 2) {
           done();
         }
@@ -134,7 +134,7 @@ describe('Button', function () {
       instance.on('hold', function (evt) {
         spy();
         totalCallCount++;
-        assert.equal(evt.holdDurationMs, spy.callCount * 1000);
+        assert.equal(evt.durationMs, spy.callCount * 1000);
         if (totalCallCount == 4) {
           done();
         }
