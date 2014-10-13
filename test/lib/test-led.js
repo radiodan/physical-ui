@@ -108,6 +108,27 @@ describe('LED', function () {
     });
   });
 
+  describe('#transitions', function () {
+    it('allows defaults to be set', function () {
+      var led = subject.create(9, { wpi: this.wpi });
+      led.transitions({ delay: 5000 });
+
+      assert.deepEqual(led.transitions(), { delay: 5000 });
+    });
+    it('transitions brightness over a default time period', function () {
+      var tween = require('tween.js'),
+          led = subject.create(9, { wpi: this.wpi, tween: tween });
+      led.transitions({ duration: 2000 });
+
+      led.on();
+      assert.equal(led.brightness(), 0, 'brightness should be 0');
+      tween.update(Date.now() + 1000);
+      assert.equal(led.brightness(), 50, 'brightness should be 50');
+      tween.update(Date.now() + 2000);
+      assert.equal(led.brightness(), 100, 'brightness should be 100');
+
+    });
+  });
 
   describe('#destroy', function () {
     it('turns LED off', function () {
