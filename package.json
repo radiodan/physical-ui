@@ -20,7 +20,8 @@
   "dependencies": {
     "request": "~2.34.0",
     "radiodan-client": "~0.0.0",
-    "mod-loop": "0.0.2"
+    "mod-loop": "0.0.2",
+    "lodash": "~2.4.1"
   },
   "keywords": [
     "radiodan"
