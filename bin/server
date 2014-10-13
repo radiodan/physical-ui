@@ -25,12 +25,6 @@ if( process.env.WIRING_PI && process.env.WIRING_PI === 'mock' ) {
   opts.wpi = require('../lib/wiring-pi-mock').create();
 }
 
-opts.components = {
-  buttons        : require('../lib/components/button'),
-  rotaryEncoders : require('../lib/components/rotary-encoder'),
-  RGBLEDs        : require('../lib/components/rgb')
-};
-
 function cleanup(err) {
   console.log('Cleaning up before shutdown...');
   if (err) { console.log(err.stack); }
