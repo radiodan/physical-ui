@@ -34,12 +34,13 @@ describe('LED', function () {
       led.on();
       assert.ok( this.wpi.digitalWrite.calledWith(9, 0) );
     });
-    it('uses pwm if brightness changed', function () {
+    it('uses pwm if brightness changed to partial value', function () {
       var led = subject.create(9, { wpi: this.wpi });
       led.brightness(10);
+      assert.ok( this.wpi.softPwmWrite.calledWith(9, 10), 'softPwmWrite not called with expected values' );
       led.on();
-      assert.ok( this.wpi.softPwmWrite.calledOnce );
-      assert.ok( this.wpi.softPwmWrite.calledWith(9, 10) );
+      assert.ok( this.wpi.softPwmWrite.calledWith(9, 100), 'softPwmWrite not called with expected values' );
+      assert.ok( this.wpi.softPwmWrite.calledTwice, 'softPwmWrite not called twice' );
     });
     it('returns self for chaining', function () {
       var led = subject.create(9, { wpi: this.wpi });
@@ -58,19 +59,13 @@ describe('LED', function () {
       led.off();
       assert.ok( this.wpi.digitalWrite.calledWith(9, 1) );
     });
-    it('uses pwm if brightness changed', function () {
+    it('uses pwm if brightness changed to partial value', function () {
       var led = subject.create(9, { wpi: this.wpi });
       led.brightness(50);
+      assert.ok( this.wpi.softPwmWrite.calledWith(9, 50) );
       led.off();
-      assert.ok( this.wpi.softPwmWrite.calledOnce );
       assert.ok( this.wpi.softPwmWrite.calledWith(9, 0) );
-    });
-    it('uses reversed pwm if brightness changed', function () {
-      var led = subject.create(9, { reverse: true, wpi: this.wpi });
-      led.brightness(10);
-      led.off();
-      assert.ok( this.wpi.softPwmWrite.calledOnce );
-      assert.ok( this.wpi.softPwmWrite.calledWith(9, 100) );
+      assert.ok( this.wpi.softPwmWrite.calledTwice );
     });
     it('returns self for chaining', function () {
       var led = subject.create(9, { wpi: this.wpi });
@@ -81,7 +76,7 @@ describe('LED', function () {
   describe('#brightness', function () {
     it('returns current value if no args', function () {
       var led = subject.create(9, { wpi: this.wpi });
-      assert.equal( led.brightness(), 100 );
+      assert.equal( led.brightness(), 0 );
     });
     it('sets pin for software PWM', function () {
       var pwmInitialValue = 0,
@@ -90,7 +85,7 @@ describe('LED', function () {
 
       led.brightness(40);
       assert.ok( this.wpi.softPwmCreate.calledWith(9, pwmInitialValue, pwmRange) );
-      assert.notOk( this.wpi.softPwmWrite.called );
+      assert.ok( this.wpi.softPwmWrite.called );
     });
     it('handles reversed LED', function () {
       var pwmInitialValue = 100,
