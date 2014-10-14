@@ -23,24 +23,12 @@ describe('LED', function () {
   });
 
   describe('#on', function () {
-    it('turns LED on with default brightness', function () {
+    it('is an alias for brightness(100)', function () {
       var led = subject.create(9, { wpi: this.wpi });
+      led.brightness = sinon.spy();
+
       led.on();
-      assert.ok( this.wpi.digitalWrite.calledWith(9, 1) );
-      assert.equal( led.brightness(), 100 );
-    });
-    it('sends correct signal when reversed', function () {
-      var led = subject.create(9, { reverse:true, wpi: this.wpi });
-      led.on();
-      assert.ok( this.wpi.digitalWrite.calledWith(9, 0) );
-    });
-    it('uses pwm if brightness changed to partial value', function () {
-      var led = subject.create(9, { wpi: this.wpi });
-      led.brightness(10);
-      assert.ok( this.wpi.softPwmWrite.calledWith(9, 10), 'softPwmWrite not called with expected values' );
-      led.on();
-      assert.ok( this.wpi.softPwmWrite.calledWith(9, 100), 'softPwmWrite not called with expected values' );
-      assert.ok( this.wpi.softPwmWrite.calledTwice, 'softPwmWrite not called twice' );
+      assert.ok(led.brightness.calledWith(100));
     });
     it('returns promise', function () {
       var led = subject.create(9, { wpi: this.wpi });
@@ -49,23 +37,12 @@ describe('LED', function () {
   });
 
   describe('#off', function () {
-    it('turns LED off', function () {
+    it('is an alias for brightness(0)', function () {
       var led = subject.create(9, { wpi: this.wpi });
+      led.brightness = sinon.spy();
+
       led.off();
-      assert.ok( this.wpi.digitalWrite.calledWith(9, 0) );
-    });
-    it('sends correct signal when reversed', function () {
-      var led = subject.create(9, { reverse:true, wpi: this.wpi });
-      led.off();
-      assert.ok( this.wpi.digitalWrite.calledWith(9, 1) );
-    });
-    it('uses pwm if brightness changed to partial value', function () {
-      var led = subject.create(9, { wpi: this.wpi });
-      led.brightness(50);
-      assert.ok( this.wpi.softPwmWrite.calledWith(9, 50) );
-      led.off();
-      assert.ok( this.wpi.softPwmWrite.calledWith(9, 0) );
-      assert.ok( this.wpi.softPwmWrite.calledTwice );
+      assert.ok(led.brightness.calledWith(0));
     });
     it('returns promise', function () {
       var led = subject.create(9, { wpi: this.wpi });
@@ -86,6 +63,11 @@ describe('LED', function () {
       led.brightness(40);
       assert.ok( this.wpi.softPwmCreate.calledWith(9, pwmInitialValue, pwmRange) );
       assert.ok( this.wpi.softPwmWrite.called );
+    });
+    it('sends correct signal when reversed', function () {
+      var led = subject.create(9, { reverse:true, wpi: this.wpi });
+      led.brightness(0);
+      assert.ok( this.wpi.digitalWrite.calledWith(9, 1) );
     });
     it('handles reversed LED', function () {
       var pwmInitialValue = 100,
@@ -111,6 +93,7 @@ describe('LED', function () {
           led = subject.create(9, { wpi: this.wpi, tween: tween });
 
       led.brightness(50, { duration: 6000 });
+
       assert.equal(led.brightness(), 0, 'brightness should be 0');
       tween.update(Date.now() + 3000);
       assert.equal(led.brightness(), 25, 'brightness should be 25');
