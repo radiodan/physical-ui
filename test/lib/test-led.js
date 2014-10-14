@@ -149,6 +149,30 @@ describe('LED', function () {
       tween.update(Date.now() + 2000);
       assert.equal(led.brightness(), 0, 'brightness should be 0 again');
     });
+    it('cancels yoyo on next transition', function () {
+      var clock = sinon.useFakeTimers();
+
+      var tween = require('tween.js'),
+          led = subject.create(9, { wpi: this.wpi, tween: tween }),
+          time = Date.now();
+
+      led.transitions({ duration: 1000 });
+
+      led.brightness(50, { yoyo: true });
+      assert.equal(led.brightness(), 0, 'brightness should be 0');
+      tween.update(time + 1000);
+      assert.equal(led.brightness(), 50, 'brightness should be 50');
+      tween.update(time + 1500);
+      assert.equal(led.brightness(), 25, 'brightness should reduce to 25');
+
+      led.brightness(100);
+      tween.update(time + 2000);
+      assert.equal(led.brightness(), 100, 'brightness should be 100');
+      tween.update(time + 2500);
+      assert.equal(led.brightness(), 100, 'brightness should still be at 100');
+
+      clock.restore();
+    });
   });
 
   describe('#transitions', function () {
