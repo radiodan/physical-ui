@@ -48,7 +48,17 @@ describe('RGB', function () {
       assert.ok(this.led.on.calledAfter(this.led.off), 'on called after off');
       assert.equal(this.led.on.callCount, 3, 'led.on() called');
     });
-    it('returns self for chaining', function () {
+    it('passes through transitions', function () {
+      var rgb = subject.create([9, 10, 11], { LED: this.LED });
+      var trans = {};
+
+      rgb.on(trans);
+
+      assert.ok(this.led.on.calledAfter(this.led.off), 'on called after off');
+      assert.equal(this.led.on.callCount, 3, 'led.on() called');
+      assert.ok(this.led.on.calledWith(trans));
+    });
+    it('returns promise', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
       assert.ok( typeof rgb.on().then === 'function' );
     });
@@ -61,6 +71,16 @@ describe('RGB', function () {
       rgb.off();
 
       assert.equal(this.led.off.callCount, 3);
+    });
+    it('passes through transitions', function () {
+      var rgb = subject.create([9, 10, 11], { LED: this.LED });
+      var trans = {};
+      this.led.off.reset(); // ignore init calls
+
+      rgb.off(trans);
+
+      assert.equal(this.led.off.callCount, 3);
+      assert.ok(this.led.off.calledWith(trans));
     });
     it('returns self for chaining', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });

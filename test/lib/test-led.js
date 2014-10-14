@@ -30,6 +30,14 @@ describe('LED', function () {
       led.on();
       assert.ok(led.brightness.calledWith(100));
     });
+    it('passes through transitions', function () {
+      var led = subject.create(9, { wpi: this.wpi }),
+          transition = {};
+      led.brightness = sinon.spy();
+
+      led.on(transition);
+      assert.ok(led.brightness.calledWith(100, transition));
+    });
     it('returns promise', function () {
       var led = subject.create(9, { wpi: this.wpi });
       assert.ok( typeof led.on().then === 'function' );
@@ -43,6 +51,14 @@ describe('LED', function () {
 
       led.off();
       assert.ok(led.brightness.calledWith(0));
+    });
+    it('passes through transitions', function () {
+      var led = subject.create(9, { wpi: this.wpi }),
+          transition = {};
+      led.brightness = sinon.spy();
+
+      led.off(transition);
+      assert.ok(led.brightness.calledWith(0, transition));
     });
     it('returns promise', function () {
       var led = subject.create(9, { wpi: this.wpi });
