@@ -102,6 +102,39 @@ describe('LED', function () {
     });
   });
 
+  describe('all transitions', function () {
+    it('support repetition', function () {
+      var tween = require('tween.js'),
+          led = subject.create(9, { wpi: this.wpi, tween: tween });
+
+      led.transitions({ duration: 1000, repeat: true });
+
+      led.brightness(50);
+      assert.equal(led.brightness(), 0, 'brightness should be 0');
+      tween.update(Date.now() + 1000);
+      assert.equal(led.brightness(), 50, 'brightness should be 50');
+      tween.update(Date.now() + 1001);
+      assert.equal(led.brightness(), 0, 'brightness should be 0 again');
+      tween.update(Date.now() + 2000);
+      assert.equal(led.brightness(), 50, 'brightness should be 50');
+    });
+    it('support yoyo', function () {
+      var tween = require('tween.js'),
+          led = subject.create(9, { wpi: this.wpi, tween: tween });
+
+      led.transitions({ duration: 1000, yoyo: true });
+
+      led.brightness(50);
+      assert.equal(led.brightness(), 0, 'brightness should be 0');
+      tween.update(Date.now() + 1000);
+      assert.equal(led.brightness(), 50, 'brightness should be 50');
+      tween.update(Date.now() + 1001);
+      assert.equal(led.brightness(), 50, 'brightness should remain at 50');
+      tween.update(Date.now() + 2000);
+      assert.equal(led.brightness(), 0, 'brightness should be 0 again');
+    });
+  });
+
   describe('#transitions', function () {
     it('allows defaults to be set', function () {
       var led = subject.create(9, { wpi: this.wpi });
