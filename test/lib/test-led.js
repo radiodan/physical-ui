@@ -106,6 +106,17 @@ describe('LED', function () {
       var led = subject.create(9, { wpi: this.wpi });
       assert.ok( typeof led.on().then === 'function' );
     });
+    it('overrides default transitions', function () {
+      var tween = require('tween.js'),
+          led = subject.create(9, { wpi: this.wpi, tween: tween });
+
+      led.brightness(50, { duration: 6000 });
+      assert.equal(led.brightness(), 0, 'brightness should be 0');
+      tween.update(Date.now() + 3000);
+      assert.equal(led.brightness(), 25, 'brightness should be 25');
+      tween.update(Date.now() + 6000);
+      assert.equal(led.brightness(), 50, 'brightness should be 50');
+    });
   });
 
   describe('#transitions', function () {
