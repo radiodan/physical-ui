@@ -128,6 +128,21 @@ describe('LED', function () {
       assert.equal(led.brightness(), 100, 'brightness should be 100');
 
     });
+    it('cancels active transition when new one called', function () {
+      var tween = require('tween.js'),
+          mockTween = new tween.Tween({ value: 0 }),
+          mock = sinon.mock(mockTween),
+          led;
+
+      tween.Tween = function () { return mockTween; }
+      led = subject.create(9, { wpi: this.wpi, tween: tween });
+
+      led.transitions({ duration: 6000 });
+      led.on();
+      mock.expects("stop").once();
+      led.brightness(50);
+      mock.verify();
+    });
   });
 
   describe('#destroy', function () {
