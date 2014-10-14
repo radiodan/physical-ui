@@ -50,7 +50,7 @@ describe('RGB', function () {
     });
     it('returns self for chaining', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
-      assert.equal(rgb.on(), rgb);
+      assert.ok( typeof rgb.on().then === 'function' );
     });
   });
 
@@ -64,7 +64,7 @@ describe('RGB', function () {
     });
     it('returns self for chaining', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
-      assert.equal(rgb.off(), rgb);
+      assert.ok( typeof rgb.off().then === 'function' );
     });
   });
 
@@ -88,7 +88,7 @@ describe('RGB', function () {
     });
     it('returns self for chaining', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
-      assert.equal(rgb.off(), rgb);
+      assert.ok( typeof rgb.colour([0,0,0]).then === 'function' );
     });
   });
 
@@ -110,7 +110,7 @@ describe('RGB', function () {
 
       assert.equal(this.led.destroy.callCount, 3);
     });
-    it('does not return self for chaining', function () {
+    it('returns promise', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
       assert.notEqual(rgb.destroy(), rgb);
     });

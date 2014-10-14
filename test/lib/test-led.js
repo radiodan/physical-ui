@@ -42,9 +42,9 @@ describe('LED', function () {
       assert.ok( this.wpi.softPwmWrite.calledWith(9, 100), 'softPwmWrite not called with expected values' );
       assert.ok( this.wpi.softPwmWrite.calledTwice, 'softPwmWrite not called twice' );
     });
-    it('returns self for chaining', function () {
+    it('returns promise', function () {
       var led = subject.create(9, { wpi: this.wpi });
-      assert.equal( led.on(), led );
+      assert.ok( typeof led.on().then === 'function' );
     });
   });
 
@@ -67,9 +67,9 @@ describe('LED', function () {
       assert.ok( this.wpi.softPwmWrite.calledWith(9, 0) );
       assert.ok( this.wpi.softPwmWrite.calledTwice );
     });
-    it('returns self for chaining', function () {
+    it('returns promise', function () {
       var led = subject.create(9, { wpi: this.wpi });
-      assert.equal( led.off(), led );
+      assert.ok( typeof led.on().then === 'function' );
     });
   });
 
@@ -102,9 +102,9 @@ describe('LED', function () {
       led.brightness(60);
       assert.ok( this.wpi.softPwmCreate.calledOnce );
     });
-    it('returns self for chaining', function () {
+    it('returns promise', function () {
       var led = subject.create(9, { wpi: this.wpi });
-      assert.equal( led.brightness(50), led );
+      assert.ok( typeof led.on().then === 'function' );
     });
   });
 
@@ -118,6 +118,7 @@ describe('LED', function () {
     it('transitions brightness over a default time period', function () {
       var tween = require('tween.js'),
           led = subject.create(9, { wpi: this.wpi, tween: tween });
+
       led.transitions({ duration: 2000 });
 
       led.on();
@@ -151,17 +152,9 @@ describe('LED', function () {
       led.destroy();
       assert.ok( this.wpi.digitalWrite.calledWith(9, 0) );
     });
-    it('does not allow chaining', function () {
+    it('returns promise', function () {
       var led = subject.create(9, { wpi: this.wpi });
-      assert.notEqual( led.destroy(), led );
+      assert.ok( typeof led.destroy().then === 'function' );
     });
-    // it('ensures LED cannot be turned back on', function () {
-    //   var led = subject.create(9, { wpi: this.wpi });
-    //   led.destroy();
-    //   led.on();
-    //   assert.throws(function (){
-    //     led.on();
-    //   });
-    // });
   });
 });
