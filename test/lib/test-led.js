@@ -9,6 +9,24 @@ var subject = require('../../lib/components/led'),
     wpiMock = require('../../lib/wiring-pi-mock');
 
 describe('LED', function () {
+  before(function () {
+    var oldTween;
+
+    this.tween = require('tween.js');
+    oldTween = this.tween.Tween;
+
+    this.mockTweenConstructor = function () {
+      var mockTween = new this.tween.Tween({ value: 0 }),
+          mock = sinon.mock(mockTween);
+      this.tween.Tween = function () { return mockTween; }
+
+      return mock;
+    };
+
+    this.restoreTweenContructor = function () {
+      this.tween.Tween = oldTween;
+    }
+  });
   beforeEach(function () {
     // Create a wiring-pi mock where each method is a spy
     this.wpi = wpiMock.create(function () { return sinon.spy(); });
@@ -107,7 +125,7 @@ describe('LED', function () {
     it('overrides default transitions', function () {
       var clock = sinon.useFakeTimers();
 
-      var tween = require('tween.js'),
+      var tween = this.tween,
           led = subject.create(9, { wpi: this.wpi, tween: tween });
 
       led.brightness(50, { duration: 6000 });
@@ -126,7 +144,7 @@ describe('LED', function () {
     it('support repetition', function () {
       var clock = sinon.useFakeTimers();
 
-      var tween = require('tween.js'),
+      var tween = this.tween,
           led = subject.create(9, { wpi: this.wpi, tween: tween });
 
       led.transitions({ duration: 1000, repeat: true });
@@ -145,7 +163,7 @@ describe('LED', function () {
     it('support yoyo', function () {
       var clock = sinon.useFakeTimers();
 
-      var tween = require('tween.js'),
+      var tween = this.tween,
           led = subject.create(9, { wpi: this.wpi, tween: tween });
 
       led.transitions({ duration: 1000, yoyo: true });
@@ -164,7 +182,7 @@ describe('LED', function () {
     it('cancels yoyo on next transition', function () {
       var clock = sinon.useFakeTimers();
 
-      var tween = require('tween.js'),
+      var tween = this.tween,
           led = subject.create(9, { wpi: this.wpi, tween: tween }),
           time = Date.now();
 
@@ -197,7 +215,7 @@ describe('LED', function () {
     it('transitions brightness over a default time period', function () {
       var clock = sinon.useFakeTimers();
 
-      var tween = require('tween.js'),
+      var tween = this.tween,
           led = subject.create(9, { wpi: this.wpi, tween: tween });
 
       led.transitions({ duration: 2000 });
@@ -212,12 +230,10 @@ describe('LED', function () {
       clock.restore();
     });
     it('cancels active transition when new one called', function () {
-      var tween = require('tween.js'),
-          mockTween = new tween.Tween({ value: 0 }),
-          mock = sinon.mock(mockTween),
+      var mock  = this.mockTweenConstructor(),
+          tween = this.tween,
           led;
 
-      tween.Tween = function () { return mockTween; }
       led = subject.create(9, { wpi: this.wpi, tween: tween });
 
       led.transitions({ duration: 6000 });
@@ -225,6 +241,8 @@ describe('LED', function () {
       mock.expects("stop").once();
       led.brightness(50);
       mock.verify();
+
+      this.restoreTweenContructor();
     });
   });
 
