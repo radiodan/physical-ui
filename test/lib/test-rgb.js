@@ -82,7 +82,7 @@ describe('RGB', function () {
       assert.equal(this.led.off.callCount, 3);
       assert.ok(this.led.off.calledWith(trans));
     });
-    it('returns self for chaining', function () {
+    it('returns promise', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
       assert.ok( typeof rgb.off().then === 'function' );
     });
@@ -106,7 +106,7 @@ describe('RGB', function () {
       assert.ok(green.brightness.calledWith(50));
       assert.ok(blue.brightness.calledWith(0));
     });
-    it('returns self for chaining', function () {
+    it('returns promise', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
       assert.ok( typeof rgb.colour([0,0,0]).then === 'function' );
     });
