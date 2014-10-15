@@ -106,6 +106,24 @@ describe('RGB', function () {
       assert.ok(green.brightness.calledWith(50));
       assert.ok(blue.brightness.calledWith(0));
     });
+    it('doesn\'t set colour again if already set', function () {
+      var red   = createLEDInstanceSpy(),
+          green = createLEDInstanceSpy(),
+          blue  = createLEDInstanceSpy();
+
+      this.LED.create.withArgs(9).returns(red);
+      this.LED.create.withArgs(10).returns(green);
+      this.LED.create.withArgs(11).returns(blue);
+
+      var rgb = subject.create([9, 10, 11], { LED: this.LED });
+
+      rgb.colour([255, 128, 0]);
+      rgb.colour([255, 128, 0]);
+
+      assert.ok(red.brightness.calledOnce);
+      assert.ok(green.brightness.calledOnce);
+      assert.ok(blue.brightness.calledOnce);
+    });
     it('returns promise', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
       assert.ok( typeof rgb.colour([0,0,0]).then === 'function' );
