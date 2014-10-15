@@ -203,6 +203,24 @@ describe('LED', function () {
 
       clock.restore();
     });
+    it('support easing', function () {
+      var mock  = this.mockTweenConstructor(),
+          tween = this.tween,
+          ease  = tween.Easing.Quintic.In,
+          led;
+
+      led = subject.create(9, { wpi: this.wpi, tween: tween });
+
+      mock.expects("easing")
+          .withArgs(ease)
+          .once();
+
+      led.brightness(50, { duration: 500, easing: 'easeInQuint' });
+
+      mock.verify();
+
+      this.restoreTweenContructor();
+    });
   });
 
   describe('#transitions', function () {
