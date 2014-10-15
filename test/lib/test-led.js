@@ -105,6 +105,8 @@ describe('LED', function () {
       assert.ok( typeof led.on().then === 'function' );
     });
     it('overrides default transitions', function () {
+      var clock = sinon.useFakeTimers();
+
       var tween = require('tween.js'),
           led = subject.create(9, { wpi: this.wpi, tween: tween });
 
@@ -115,11 +117,15 @@ describe('LED', function () {
       assert.equal(led.brightness(), 25, 'brightness should be 25');
       tween.update(Date.now() + 6000);
       assert.equal(led.brightness(), 50, 'brightness should be 50');
+
+      clock.restore();
     });
   });
 
   describe('all transitions', function () {
     it('support repetition', function () {
+      var clock = sinon.useFakeTimers();
+
       var tween = require('tween.js'),
           led = subject.create(9, { wpi: this.wpi, tween: tween });
 
@@ -133,8 +139,12 @@ describe('LED', function () {
       assert.equal(led.brightness(), 0, 'brightness should be 0 again');
       tween.update(Date.now() + 2000);
       assert.equal(led.brightness(), 50, 'brightness should be 50');
+
+      clock.restore();
     });
     it('support yoyo', function () {
+      var clock = sinon.useFakeTimers();
+
       var tween = require('tween.js'),
           led = subject.create(9, { wpi: this.wpi, tween: tween });
 
@@ -148,6 +158,8 @@ describe('LED', function () {
       assert.equal(led.brightness(), 50, 'brightness should remain at 50');
       tween.update(Date.now() + 2000);
       assert.equal(led.brightness(), 0, 'brightness should be 0 again');
+
+      clock.restore();
     });
     it('cancels yoyo on next transition', function () {
       var clock = sinon.useFakeTimers();
@@ -183,6 +195,8 @@ describe('LED', function () {
       assert.deepEqual(led.transitions(), { delay: 5000 });
     });
     it('transitions brightness over a default time period', function () {
+      var clock = sinon.useFakeTimers();
+
       var tween = require('tween.js'),
           led = subject.create(9, { wpi: this.wpi, tween: tween });
 
@@ -195,6 +209,7 @@ describe('LED', function () {
       tween.update(Date.now() + 2000);
       assert.equal(led.brightness(), 100, 'brightness should be 100');
 
+      clock.restore();
     });
     it('cancels active transition when new one called', function () {
       var tween = require('tween.js'),
