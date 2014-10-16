@@ -30,7 +30,8 @@ describe('RGB', function () {
     });
     it('defaults to off', function () {
       subject.create([9, 10, 11], { LED: this.LED });
-      assert.equal(this.led.off.callCount, 3);
+      assert.equal(this.led.brightness.callCount, 3);
+      assert.ok(this.led.brightness.calledWith(0));
     });
     it('passes through options to LED', function () {
       subject.create([9, 10, 11], { LED: this.LED, reverse:true });
@@ -40,23 +41,22 @@ describe('RGB', function () {
   });
 
   describe('#on', function () {
-    it('turns all LEDs on', function () {
+    it('is the same as colour([255,255,255])', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
+      rgb.colour = sinon.spy();
 
       rgb.on();
-
-      assert.ok(this.led.on.calledAfter(this.led.off), 'on called after off');
-      assert.equal(this.led.on.callCount, 3, 'led.on() called');
+      assert.ok( rgb.colour.calledOnce );
+      assert.deepEqual( rgb.colour.firstCall.args[0], [255,255,255] );
     });
     it('passes through transitions', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
       var trans = {};
+      rgb.colour = sinon.spy();
 
       rgb.on(trans);
-
-      assert.ok(this.led.on.calledAfter(this.led.off), 'on called after off');
-      assert.equal(this.led.on.callCount, 3, 'led.on() called');
-      assert.ok(this.led.on.calledWith(trans));
+      assert.ok( rgb.colour.calledOnce );
+      assert.equal( rgb.colour.firstCall.args[1], trans );
     });
     it('returns promise', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
@@ -65,22 +65,22 @@ describe('RGB', function () {
   });
 
   describe('#off', function () {
-    it('turns all LEDs off', function () {
+    it('is the same as colour([0,0,0])', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
-      this.led.off.reset(); // ignore init calls
-      rgb.off();
+      rgb.colour = sinon.spy();
 
-      assert.equal(this.led.off.callCount, 3);
+      rgb.off();
+      assert.ok( rgb.colour.calledOnce );
+      assert.deepEqual( rgb.colour.firstCall.args[0], [0,0,0] );
     });
     it('passes through transitions', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
       var trans = {};
-      this.led.off.reset(); // ignore init calls
+      rgb.colour = sinon.spy();
 
       rgb.off(trans);
-
-      assert.equal(this.led.off.callCount, 3);
-      assert.ok(this.led.off.calledWith(trans));
+      assert.ok( rgb.colour.calledOnce );
+      assert.equal( rgb.colour.firstCall.args[1], trans );
     });
     it('returns promise', function () {
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
@@ -116,6 +116,10 @@ describe('RGB', function () {
       this.LED.create.withArgs(11).returns(blue);
 
       var rgb = subject.create([9, 10, 11], { LED: this.LED });
+
+      red.brightness.reset();
+      green.brightness.reset();
+      blue.brightness.reset();
 
       rgb.colour([255, 128, 0]);
       rgb.colour([255, 128, 0]);
