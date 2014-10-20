@@ -29,10 +29,11 @@ function cleanup(err) {
   console.log('Cleaning up before shutdown...');
   if (err) { console.log(err.stack); }
 
-  bootstrap.stop();
-
-  console.log('...exit');
-  process.exit();
+  bootstrap.stop()
+    .then(function () {
+      console.log('...exit');
+      process.exit();
+    });
 }
 
 process.on('SIGTERM', cleanup);
