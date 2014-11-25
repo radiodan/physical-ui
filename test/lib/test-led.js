@@ -2,8 +2,11 @@
 'use strict';
 
 var chai   = require('chai'),
+    chaiAsPromised = require('chai-as-promised'),
     assert = chai.assert,
     sinon  = require('sinon');
+
+chai.use(chaiAsPromised);
 
 var subject = require('../../lib/components/led'),
     wpiMock = require('../../lib/wiring-pi-mock');
@@ -92,11 +95,14 @@ describe('LED', function () {
     it('sets pin for software PWM', function () {
       var pwmInitialValue = 0,
           pwmRange = 100,
-          led = subject.create(9, { wpi: this.wpi });
+          wpi = this.wpi,
+          led = subject.create(9, { wpi: wpi });
 
-      led.brightness(40);
-      assert.ok( this.wpi.softPwmCreate.calledWith(9, pwmInitialValue, pwmRange) );
-      assert.ok( this.wpi.softPwmWrite.called );
+      var promise = led.brightness(40);
+      assert.ok( wpi.softPwmCreate.calledWith(9, pwmInitialValue, pwmRange) );
+      promise.then(function () {
+        assert.ok( wpi.softPwmWrite.called );
+      });
     });
     it('sends correct signal when reversed', function () {
       var led = subject.create(9, { reverse:true, wpi: this.wpi });
@@ -249,15 +255,40 @@ describe('LED', function () {
     });
     it('cancels active transition when new one called', function () {
       var mock  = this.mockTweenConstructor(),
+          clock = sinon.useFakeTimers(),
+          tween = this.tween,
+          led   = subject.create(9, { wpi: this.wpi, tween: tween });
+
+      mock.expects("stop").once();
+
+      led.transitions({ duration: 2000 });
+
+      led.brightness(100);
+      assert.equal(led.brightness(), 0, 'brightness should be 0');
+      tween.update(Date.now() + 1000);
+      assert.equal(led.brightness(), 50, 'brightness should be 50');
+      led.brightness(0);
+      tween.update(Date.now() + 1500);
+      assert.equal(led.brightness(), Math.round(12.5), 'brightness should be heading to 0');
+
+      mock.verify();
+
+      clock.restore();
+      this.restoreTweenContructor();
+    });
+    it('chains transitions with chain:true', function () {
+      var mock  = this.mockTweenConstructor(),
           tween = this.tween,
           led;
 
       led = subject.create(9, { wpi: this.wpi, tween: tween });
 
+      mock.expects("start").once();
+      mock.expects("stop").never();
+
       led.transitions({ duration: 6000 });
       led.on();
-      mock.expects("stop").once();
-      led.brightness(50);
+      led.brightness(50, { chain: true });
       mock.verify();
 
       this.restoreTweenContructor();
