@@ -106,8 +106,9 @@ describe('LED', function () {
     });
     it('sends correct signal when reversed', function () {
       var led = subject.create(9, { reverse:true, wpi: this.wpi });
-      led.brightness(0);
-      assert.ok( this.wpi.digitalWrite.calledWith(9, 1) );
+      led.brightness(100);
+      assert.ok( this.wpi.digitalWrite.called, 'digitalWrite not called' );
+      assert.ok( this.wpi.digitalWrite.calledWith(9, 0) );
     });
     it('handles reversed LED', function () {
       var pwmInitialValue = 100,
@@ -277,20 +278,30 @@ describe('LED', function () {
       this.restoreTweenContructor();
     });
     it('chains transitions with chain:true', function () {
-      var mock  = this.mockTweenConstructor(),
-          tween = this.tween,
-          led;
+      var tween = this.tween,
+          start = Date.now(),
+          clock = sinon.useFakeTimers(),
+          led   = subject.create(9, { wpi: this.wpi, tween: tween });
 
-      led = subject.create(9, { wpi: this.wpi, tween: tween });
+      led.transitions({ duration: 2000 });
 
-      mock.expects("start").once();
-      mock.expects("stop").never();
+      led.brightness(100);
+      assert.equal(led.brightness(),  0, 'brightness should be 0');
+      tween.update(Date.now() + 1000);
+      assert.equal(led.brightness(), 50, 'brightness should be 50');
 
-      led.transitions({ duration: 6000 });
-      led.on();
       led.brightness(50, { chain: true });
-      mock.verify();
 
+      tween.update(start + 2000);
+      assert.equal(led.brightness(), 100, 'brightness should be 100');
+
+      // next tween should now begin
+      tween.update(start + 3000);
+      assert.equal(led.brightness(), 75, 'brightness should be 75 again');
+      tween.update(start + 4000);
+      assert.equal(led.brightness(), 50, 'brightness should be 50 again');
+
+      clock.restore();
       this.restoreTweenContructor();
     });
   });
