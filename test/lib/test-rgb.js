@@ -89,6 +89,14 @@ describe('RGB', function () {
   });
 
   describe('#colour', function () {
+    it('returns the current value if called without params', function (done) {
+      var rgb = subject.create([9, 10, 11], { LED: this.LED });
+      rgb.colour()
+         .then(function (colour) {
+            assert.deepEqual(colour, [0, 0, 0]);
+            done();
+         });
+    });
     it('turns the correct LEDs on and off', function () {
       var red   = createLEDInstanceSpy(),
           green = createLEDInstanceSpy(),
