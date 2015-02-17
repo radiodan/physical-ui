@@ -1,0 +1,6 @@
+site_name: Radiodan Physical UI Server
+theme: readthedocs
+pages:
+  - ["index.md", "Index"]
+  - ["usage.md", "Usage Guide"]
+  - ["message-format.md", "Message Format"]

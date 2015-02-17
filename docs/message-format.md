@@ -6,27 +6,33 @@
 
 Emits when button is pressed.
 
-    {
-      pressed: true
-    }
+```json
+{
+  "pressed": true
+}
+```
 
 ### event.rotary-encoder.`<id>`.turn
 
 Emits when encoder is actively turning.
 
-    {
-      direction: 'clockwise',
-      distance: 1
-    }
+```json
+{
+  "direction": "clockwise",
+  "distance": 1
+}
+```
 
 ### event.rgb-led.`<id>`.emit
 
 Emits when RGB LED turns on or off. Also returns current colour as RGB value.
 
-    {
-      emit: true,
-      colour: [0, 0, 255]
-    }
+```json
+{
+  "emit": true,
+  "colour": [0, 0, 255]
+}
+```
 
 ## Commands
 
@@ -34,13 +40,17 @@ Emits when RGB LED turns on or off. Also returns current colour as RGB value.
 
 Turn RGB LED on or off:
 
-    {
-      emit: true
-    }
+```json
+{
+  "emit": true
+}
+```
 
 Set RGB colour:
 
-    {
-      colour: [255, 0, 0]
-    }
+```json
+{
+  "colour": [255, 0, 0]
+}
+```
 
