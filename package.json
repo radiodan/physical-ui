@@ -1,6 +1,6 @@
 {
   "name": "physical-ui",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A physical interface for Radiodan",
   "main": "lib/bootstrap",
   "scripts": {
