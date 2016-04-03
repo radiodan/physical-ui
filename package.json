@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A physical interface for Radiodan",
   "main": "lib/bootstrap",
+  "bin": {
+    "physical-ui-server": "./bin/server"
+  },
   "scripts": {
     "start": "bin/server",
     "dev": "WIRING_PI=mock bin/server",
