@@ -1,10 +1,10 @@
 {
-  "name": "physical-ui",
+  "name": "radiodan-physical-ui",
   "version": "1.0.0",
   "description": "A physical interface for Radiodan",
   "main": "lib/bootstrap",
   "bin": {
-    "physical-ui-server": "./bin/server"
+    "radiodan-physical-ui": "./bin/server"
   },
   "scripts": {
     "start": "bin/server",
